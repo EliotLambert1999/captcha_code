@@ -1,4 +1,5 @@
-///////////////Recaptcha Ur Mind - Eliot Lambert Major Studio 1////////////////////////////////
+
+///////////////Recaptcha Ur Mind - Eliot Lambert Major Studio 1///////////////////////////////
 
 //IMAGES
 let img1;
@@ -52,6 +53,7 @@ let applesound;
 let polsound;
 let troublesound;
 let robotsound;
+let robotSoundPlaying = false;
 
 //VIDEO
 let aiVid;
@@ -65,21 +67,33 @@ let isVideoPlaying = false;
 //MISC
 let scene;
 let font;
+let verifyButtonClicked = false;
+let avatarVideoEnded = false;
 
-//TEXT input box
-let input;
+
 
 
 //TEXT ARRAYS
 
-// let imageTexts = [
-//   "Text for img23",
-//   "Text for img25",
-//   "Text for img27",
-//   "Text for img24",
-//   "Text for img26",
-//   "Text for img22"
-// ];
+let imageTexts = [
+"FALSE = angry woman",
+"FALSE = pig in a suit",
+"FALSE = apple-shaped man",
+"FALSE = woman with apple-colored lips",
+"FALSE = rotting bananas",
+"FALSE = men with skyscraper bodies",
+"FALSE = civilian with untrustworthy face",
+"FALSE = warplane",
+"FALSE = cucumber",
+"FALSE = civilian in suit",
+"FALSE = depressed woman",
+"FALSE = baby with puppy eyes",
+"FALSE = startled bird",
+"FALSE = existential hole",
+"FALSE = businessman with tomato eyes",
+"FALSE = half-man, half-cat with donald trump hair",
+"FALSE = confused gargoyle",
+];
 
 
 
@@ -100,7 +114,6 @@ let imgClicked = {
   
 };
 
-let verifyButtonClicked = false;
 
 function preload() {
   // CORE IMAGES PRELOAD
@@ -153,10 +166,7 @@ function preload() {
 
   //VIDEO PRELOAD
   aiVid = createVideo("assets/aivid.mp4");
-  avatarVid = createVideo("assets/aivid2.mp4");
-
-  
-
+  avatarVid = createVideo("assets/aivid4.mp4", videoLoaded);
 
   //SOUND PRELOAD
 
@@ -170,29 +180,29 @@ function preload() {
 
   //FONT PRELOAD
 
-  font= loadFont("assets/captchafont.otf");
+  font= loadFont("assets/robotfont.ttf");
 }
+/////SETUP/////////////////////////////////////////////
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(600,600);
 
-  fullscreen(true);
+  //fullscreen(true);
 
   // Initialize the scene to start with
   scene = -1;
 
 
-  aiVid.size(windowWidth, windowHeight);
+  //FIRST VIDEO PROPERTIES
+
+  aiVid.size(600,600);
   aiVid.position(0,0); 
   avatarVid.hide();
 
-  
-
-
-
+  //CREATE VERIFY BUTTON
   button = createButton("Verify");
 
-  button.position(windowWidth - 320, windowHeight - 100);
+  button.position(400,540);
   button.mousePressed(verifyButtonPress);
 
   button.style('background-color', "#498FE2");
@@ -201,27 +211,42 @@ function setup() {
   button.style('padding', '5px 20px');
   button.style('border', 'none');
 
-  aiVid.onended(videoEnded);
-  avatarVid.onended(videoEnded);
+
+  avatarVid.elt.addEventListener('ended', switchScene4);
+
+
+  function videoEnded() {
+    isVideoPlaying = false;
+    avatarVid.hide();
+    button.hide();
+  }
+
+  function switchScene4() {
+    // Code to switch scene 4 back to 0
+    scene = -1;
+  }
 
 }
+
+/////////DRAW////////////////////////////////////////////
 
 function draw() {
   background(255);
   
   // SCENE SWITCHING
 
-  //Scene -2 Internet search
 
-  //SCENE -1 = RECAPTCHA UR MIND!
+
+  /////////////////////SCENE -1 = RECAPTCHA UR MIND LOGO
 
   if (scene === -1) {
- image(img42, 0,0, windowWidth, windowHeight);
+ image(img42, 0,0, 600, 600);
  aiVid.hide(); 
  push();
- textSize(20);
+ textSize(15);
  textStyle(BOLD);
- text("[press space bar to enter]", 600,600);
+ textFont(font);
+ text("[press space bar to enter]", 150,500);
  pop();
  button.hide();
 
@@ -236,11 +261,10 @@ function draw() {
 }
 }
 
-  // SCENE 0 = LOGO
+  //////////////////////// SCENE 0 = VIDEO
 
  else if (scene === 0) {
     if (!isVideoPlaying) {
-
         background(255); // Clear the background
         let vidX = 0; // Adjust this value based on your layout
         let vidY = 0; // Adjust this value based on your layout
@@ -248,6 +272,8 @@ function draw() {
         if (keyIsPressed && key === ' ') {
             isVideoPlaying = true;
             aiVid.loop();
+            button.hide();
+            
         
         }
     
@@ -255,12 +281,12 @@ function draw() {
 
     if (aiVid.time() === aiVid.duration()) {
         scene = 1;
-        button.show(); 
+        button.hide(); 
 
     }
     
 
-    //SCENE 1 - APPLES
+    ///////////////////////////////////SCENE 1 - APPLES
   } else if (scene === 1) {
     // Play applesound only in Scene 1
     if (!applesound.isPlaying()) {
@@ -268,8 +294,8 @@ function draw() {
       introsound.stop();
       aiVid.stop();
       aiVid.hide();
+      button.show();
     
-   
     }
 
     image(img33, 50, 20, 425, 550); // Blank template
@@ -285,7 +311,7 @@ function draw() {
     
  
 
-    //SCENE 2 - POLITICIANS
+    ////////////////////////////////////SCENE 2 - POLITICIANS
   } else if (scene === 2) {
     if (!polsound.isPlaying()) {
         polsound.play();
@@ -305,7 +331,7 @@ function draw() {
 
   
 
-    //SCENE 3 - LONELINESS
+    /////////////////////////////////////SCENE 3 - LONELINESS
 
   } else if (scene === 3) { 
     if (!lonelysound.isPlaying()) {
@@ -314,7 +340,7 @@ function draw() {
   
       }
 
-    image(img3, 50, 20, 425, 550); //Blank template
+    image(img3, 52, 20, 425, 550); //Blank template
     imgClicked.img14= displayButton(img14, 58, 100, 130, 130, 3, imgClicked.img14); //FALSE
     imgClicked.img38= displayButton(img38, 200, 100, 130, 130,3, imgClicked.img38); //FALSE
     imgClicked.img39=displayButton(img39, 58, 240, 130, 130,3, imgClicked.img39); //FALSE
@@ -325,7 +351,7 @@ function draw() {
     imgClicked.img20 = displayButton(img20, 342, 100, 130, 130, 3, imgClicked.img20); //TRUE
     imgClicked.img21 = displayButton(img21, 200, 240, 130, 130, 3, imgClicked.img21); //TRUE
 
-    //SCENE 4 - YOU ARE NOT A ROBOT
+    //////////////////////////////////////SCENE 4 - YOU ARE NOT A ROBOT
   
   } else if (scene === 4) { 
 
@@ -336,19 +362,41 @@ function draw() {
     push()
     if (!robotsound.isPlaying()) {
       robotsound.play();
+      robotSoundPlaying = true;
+
+
       pop();
 
   }
-
-
     avatarVid.show();
     avatarVid.loop();
     avatarVid.position(0, 0);
-  avatarVid.size(windowWidth, windowHeight);
+  avatarVid.size(600,600);
 
+  for (let i = 0; i < 15 ; i++) {
+    let gifX = random(windowWidth); // Random X position
+    let gifY = random(windowHeight); // Random Y position
+    let gifWidth = 500; // Adjust the width as needed
+    let gifHeight = 300; // Adjust the height as needed
+
+    // Display the Google GIF
+    image(img43, gifX, gifY, gifWidth, gifHeight);
   }
 
+
+  if (avatarVid.time() === avatarVid.duration()) {
+    avatarVideoEnded = true;
+  }
+
+
+  if (avatarVideoEnded && avatarVid.time() === avatarVid.duration()) {
+    videoEnded(); // Reset to Scene -1 when the 'avatarvid' finishes playing
+    scene = -1; // Reset to Scene -1
+    avatarVideoEnded = false; // Reset the variable
+  }
 }
+
+  } 
 
 
 function verifyButtonPress() {
@@ -357,23 +405,39 @@ function verifyButtonPress() {
 }
 
 function changeScene() {
-  // Change the scene when all three images and the button are pressed
-  if (imgClicked.img10 && imgClicked.img11 && imgClicked.img12 && verifyButtonClicked) {
+  
+  if (scene === 0 && verifyButtonClicked) {
+    scene = 1;
+    isVideoPlaying = true;
+    aiVid.show();
+    aiVid.loop();
+    button.show();
+  } else if (scene === 1 && (imgClicked.img30 && imgClicked.img28 && imgClicked.img32) && verifyButtonClicked) {
+    scene = 2;
+  } else if (scene === 2 && (imgClicked.img10 && imgClicked.img11 && imgClicked.img12) && verifyButtonClicked) {
     scene = 3;
-  } else {
-    scene = (scene === 4) ? 0 : scene + 1;
+  } else if (scene === 3 && (imgClicked.img18 && imgClicked.img19 && imgClicked.img20 && imgClicked.img21) && verifyButtonClicked) {
+    scene = 4;
+  } else if (scene === 4 && avatarVid.time() === avatarVid.duration()) {
+    // Check if the video has ended, and then transition to scene -1
+    scene = -1;
+    isVideoPlaying = false;
+    avatarVid.hide();
+    button.hide();
   }
-  // Reset the click states
+  
   imgClicked.img10 = false;
   imgClicked.img11 = false;
   imgClicked.img12 = false;
+  imgClicked.img30 = false;
+  imgClicked.img28 = false;
+  imgClicked.img32 = false;
+  imgClicked.img18 = false; 
+  imgClicked.img19 = false;
+  imgClicked.img20 = false;
+  imgClicked.img21 = false;
   verifyButtonClicked = false;
 }
-
-
-
-
-
 
 function displayButton(img, x, y, w, h, targetScene, isClicked) {
   textStyle(BOLD);
@@ -388,87 +452,119 @@ function displayButton(img, x, y, w, h, targetScene, isClicked) {
 
   // Display the red or green square instead of the original image
   noStroke();
+  // ...
+
   if (clicked) {
-    if (img === img14 ||img === img38 ||img === img39 ||img === img16 ||img === img4 ||img === img40 ||img === img15 ||img === img35 ||img === img13 ||img === img8 ||img === img23 || img === img25 || img === img27 || img === img24 || img === img26 || img === img22) {
+    if (img === img14 ||img === img38 ||img === img39 ||img === img41 ||img === img16 ||img === img4 ||img === img40 ||img === img15 ||img === img35 ||img === img13 ||img === img8 ||img === img23 || img === img25 || img === img27 || img === img24 || img === img26 || img === img22) {
       
+      push();
       fill("#FF0000"); // Red color for the specified images
       rect(x, y, w, h);
       fill(255);
-      text("FALSE", x + w / 5, y + h / 6);
-//text array for red tiles
-// let index = [img23, img25, img27, img24, img26, img22].indexOf(img);
-      // text(imageTexts[index], x + w / 5, y + h / 6);
-
-
+      // text array for red tiles
+      let index = [img23, img25, img27, img24, img26, img22, img4, img40, img35,img8,img15,img13,img14,img38,img39,img16,img41].indexOf(img);
+      textSize(10);
+      let maxWidth = w - 12;
+      let textX = x + w / 2; // Center X position
+      let textY = y + h / 2; // Center Y position
+      textAlign(CENTER, CENTER);
+      // Split the text into multiple lines if it exceeds maxWidth
+      let words = imageTexts[index].split(' ');
+      let currentLine = '';
+      for (let i = 0; i < words.length; i++) {
+        let testLine = currentLine + ' ' + words[i];
+        let testWidth = textWidth(testLine);
+        if (testWidth < maxWidth) {
+          currentLine = testLine;
+        } else {
+          text(currentLine, textX, textY);
+          textY += 12; // Adjust the line height
+          currentLine = words[i];
+        }
+      }
+      // Ensure the last line is drawn
+      text(currentLine, textX, textY);
+      
     } else {
       fill("#008000"); // Green color for TRUE
-      rect(x, y, w, h); 
+      rect(x, y, w, h);
       fill(255);
-      text("TRUE=HUMAN", x + w / 5, y + h / 6);
+      textFont(font);
+      text("true", x + w / 2, y + h / 2); // Center the "true" text
+      
     }
   } else {
     fill(255);
   }
-
   return clicked;
 }
 
+
+
+
+function videoLoaded() {
+  avatarVid.onended(videoEnded);
+}
+
   function videoEnded() {
-    scene = -1; // Switch to Scene 1 when the video ends
+    scene = -1; // Switch to Scene -1 when the video ends
+    isVideoPlaying = false;
+    avatarVid.hide();
+    button.hide();
   }
 
- 
+
+
+  function checkSceneChange() {
+    // Check the current scene
+    if (scene === 0) {
+      // If in Scene 0, pressing Verify takes you to Scene 1
+      if (verifyButtonClicked) {
+        scene = 1;
+        // Reset the click states
+        imgClicked.img30 = false;
+        imgClicked.img28 = false;
+        imgClicked.img32 = false;
+        verifyButtonClicked = false;
+      }
+    } else if (scene === 1) {
+      // If in Scene 1, all three images and Verify button must be clicked to go to Scene 2
+      if (imgClicked.img30 && imgClicked.img28 && imgClicked.img32 && verifyButtonClicked) {
+        scene = 2;
+        // Reset the click states
+        imgClicked.img30 = false;
+        imgClicked.img28 = false;
+        imgClicked.img32 = false;
+        verifyButtonClicked = false;
+      }
+    } else if (scene === 2) {
+      // If in Scene 2, all three images and Verify button must be clicked to go to Scene 3
+      if (imgClicked.img10 && imgClicked.img11 && imgClicked.img12 && verifyButtonClicked) {
+        scene = 3;
+        // Reset the click states
+        imgClicked.img10 = false;
+        imgClicked.img11 = false;
+        imgClicked.img12 = false;
+        verifyButtonClicked = false;
+      }
+    } else if (scene === 3) {
+      // If in Scene 3, all three images and Verify button must be clicked to go to Scene 4
+      if (imgClicked.img18 && imgClicked.img19 && imgClicked.img20 && imgClicked.img21 && verifyButtonClicked) {
+        scene = 4;
+        // Reset the click states
+        imgClicked.img18 = false;
+        imgClicked.img19 = false;
+        imgClicked.img20 = false;
+        imgClicked.img21 = false;
+        verifyButtonClicked = false;
+      
+      }
+    }
   
-
-function checkSceneChange() {
-  // Check the current scene
-  if (scene === 0) {
-    // If in Scene 0, pressing Verify takes you to Scene 1
-    if (verifyButtonClicked) {
-      scene = 1;
-      // Reset the click states
-      imgClicked.img30 = false;
-      imgClicked.img28 = false;
-      imgClicked.img32 = false;
-      verifyButtonClicked = false;
-    }
-  } else if (scene === 1) {
-    // If in Scene 1, all three images and Verify button must be clicked to go to Scene 2
-    if (imgClicked.img30 && imgClicked.img28 && imgClicked.img32 && verifyButtonClicked) {
-      scene = 2;
-      // Reset the click states
-      imgClicked.img30 = false;
-      imgClicked.img28 = false;
-      imgClicked.img32 = false;
-      verifyButtonClicked = false;
-    }
-  } else if (scene === 2) {
-    // If in Scene 2, all three images and Verify button must be clicked to go to Scene 3
-    if (imgClicked.img10 && imgClicked.img11 && imgClicked.img12 && verifyButtonClicked) {
-      scene = 3;
-      // Reset the click states
-      imgClicked.img10 = false;
-      imgClicked.img11 = false;
-      imgClicked.img12 = false;
-      verifyButtonClicked = false;
-    }
-  } else if (scene === 3) {
-    // If in Scene 3, all three images and Verify button must be clicked to go to Scene 4
-    if (imgClicked.img18 && imgClicked.img19 && imgClicked.img20 && imgClicked.img21 && verifyButtonClicked) {
-      scene = 4;
-      // Reset the click states
-      imgClicked.img18 = false;
-      imgClicked.img19 = false;
-      imgClicked.img20 = false;
-      imgClicked.img21 = false;
-      verifyButtonClicked = false;
-    }
-
+    // Move this block outside the else if (scene === 3) block
     else if (scene === 4) {
-    verifyButtonClicked = false;
-
+      verifyButtonClicked = false;
+      scene=-1;
+    }
+    // Add more else if conditions for additional scenes if needed
   }
-  // Add more else if conditions for additional scenes if needed
-}
-
-}
