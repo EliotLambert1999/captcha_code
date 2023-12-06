@@ -256,7 +256,7 @@ function draw() {
   isVideoPlaying = true;
   aiVid.show(); 
   aiVid.loop();
-  button.show();
+  button.hide();
   
 }
 }
